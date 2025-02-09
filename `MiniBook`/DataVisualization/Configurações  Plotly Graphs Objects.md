@@ -920,3 +920,56 @@ color_discrete_sequence = px.colors.sequential.Plotly
 ```
 
 <img title="" src="img/cores.png" alt="image" data-align="center" width="448">
+
+
+# Gráficos de Maps
+
+
+```python
+from urllib.request import urlopen
+
+with urlopen("https://raw.githubusercontent.com/codeforamerica/click_that_hood/master/public/data/brazil-states.geojson") as response:
+    Brazil = json.load(response) # Javascrip object notation 
+
+
+state_id_map = {}
+for feature in Brazil ["features"]:
+    feature["id"] = feature["properties"]["name"]
+    state_id_map[feature["properties"]["sigla"]] = feature["id"]
+
+```
+
+```python
+import plotly.express as px
+import requests
+
+# Baixar o GeoJSON dos estados brasileiros
+url = "https://raw.githubusercontent.com/codeforamerica/click_that_hood/master/public/data/brazil-states.geojson"
+geojson_data = requests.get(url).json()
+
+# Criar um DataFrame com os estados e valores fictícios
+import pandas as pd
+
+df = pd.DataFrame({
+    "estado": [feature["properties"]["name"] for feature in geojson_data["features"]],
+    "valor": range(len(geojson_data["features"]))  # Valores fictícios para coloração
+})
+
+# Criar o mapa coroplético
+fig = px.choropleth(
+    df,
+    geojson=geojson_data,
+    locations="estado",
+    featureidkey="properties.name",  # Nome do estado no GeoJSON
+    title="Estados do Brasil"
+)
+fig.add_traces(
+    go.Scattergeo(
+        lat=data['geolocation_lat'],
+        lon=data['geolocation_lng']
+    )
+)
+
+fig.update_geos(fitbounds="locations", visible=False)  # Ajustar o zoom do mapa
+fig.show()
+```
