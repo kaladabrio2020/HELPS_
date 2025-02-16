@@ -926,50 +926,68 @@ color_discrete_sequence = px.colors.sequential.Plotly
 
 
 ```python
-from urllib.request import urlopen
-
-with urlopen("https://raw.githubusercontent.com/codeforamerica/click_that_hood/master/public/data/brazil-states.geojson") as response:
-    Brazil = json.load(response) # Javascrip object notation 
-
-
-state_id_map = {}
-for feature in Brazil ["features"]:
-    feature["id"] = feature["properties"]["name"]
-    state_id_map[feature["properties"]["sigla"]] = feature["id"]
-
+brazil = geobr.read_state(year=2016, simplified=True)
+brazil['geometry'] = brazil['geometry'].to_crs(epsg=4326)
 ```
 
 ```python
-import plotly.express as px
-import requests
-
-# Baixar o GeoJSON dos estados brasileiros
-url = "https://raw.githubusercontent.com/codeforamerica/click_that_hood/master/public/data/brazil-states.geojson"
-geojson_data = requests.get(url).json()
-
-# Criar um DataFrame com os estados e valores fictícios
-import pandas as pd
-
-df = pd.DataFrame({
-    "estado": [feature["properties"]["name"] for feature in geojson_data["features"]],
-    "valor": range(len(geojson_data["features"]))  # Valores fictícios para coloração
-})
-
-# Criar o mapa coroplético
-fig = px.choropleth(
-    df,
-    geojson=geojson_data,
-    locations="estado",
-    featureidkey="properties.name",  # Nome do estado no GeoJSON
-    title="Estados do Brasil"
-)
-fig.add_traces(
-    go.Scattergeo(
-        lat=data['geolocation_lat'],
-        lon=data['geolocation_lng']
+fig = go.Figure(
+    go.Choropleth(
+        geojson=brazil.__geo_interface__,
+        locations=brazil.index,
+        z=np.log1p(brazil['count']),
+        text=brazil['abbrev_state'],
+        customdata=np.stack([brazil['name_state'], brazil['count']], axis=1),
+        colorscale = 'Reds',
+        zmin=1,
+        zmax=18
     )
 )
+fig.update_traces(
+    hovertemplate='%{customdata[0]}-%{text}<br>%{customdata[1]}<extra></extra>',
+    showscale=False
+)
+fig.update_geos(
+    fitbounds="locations",
+    visible=False,
+    projection_scale=10,
+    center={"lat": -14.2350, "lon": -51.9253}
+)
+fig.update_layout(
+    title = dict(
+        text = 'Distribuição de vendedores',
+        xanchor = 'center',
+        x = 0.5
+    ),
+    hovermode='closest',
+    mapbox_zoom =100,
+    mapbox_style="carto-voyager",
 
-fig.update_geos(fitbounds="locations", visible=False)  # Ajustar o zoom do mapa
+    margin={"r":0,"t":50,"l":0,"b":0},
+    paper_bgcolor='rgba(0,0,0,0)',
+    plot_bgcolor='rgba(0, 0, 0, 0)',
+    dragmode    =False
+)
 fig.show()
 ```
+
+### update_geos
+```python
+fig.update_geos(
+    projection_type="mercator",       # Define a projeção do mapa
+    center={"lat": -14, "lon": -55},  # Centraliza no Brasil
+    projection_scale=5,               # Ajuste de zoom
+    fitbounds="locations",            # Ajusta os limites automaticamente
+    showcoastlines=True,        # Exibe fronteiras
+      coastlinecolor="black",       # cor das fronteira
+    showland=True,              # Exibe a terra
+      landcolor="lightgray",        # cor da terra
+    showocean=True,             # exibe oceano
+      oceancolor="lightblue",   
+    showrivers=True,            # Exibe rios no mapa
+      rivercolor="blue",
+)
+```
+outros parametros
+* `fitbounds` = 	Ajusta o mapa automaticamente para cobrir os dados ("locations" ou "geojson").
+* `visible`   = Esconde ou exibe o mapa
