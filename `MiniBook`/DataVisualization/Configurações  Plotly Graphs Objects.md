@@ -951,7 +951,8 @@ fig.update_geos(
     fitbounds="locations",
     visible=False,
     projection_scale=10,
-    center={"lat": -14.2350, "lon": -51.9253}
+    center={"lat": -14.2350, "lon": -51.9253},
+    
 )
 fig.update_layout(
     title = dict(
@@ -986,6 +987,8 @@ fig.update_geos(
       oceancolor="lightblue",   
     showrivers=True,            # Exibe rios no mapa
       rivercolor="blue",
+    bgcolor= 'rgba(0,0,0,0)'  # cor de fundo
+
 )
 ```
 outros parametros
