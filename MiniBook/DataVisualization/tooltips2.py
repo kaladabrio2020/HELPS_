@@ -3,9 +3,10 @@ import plotly.express as px
 
 df = px.data.tips()
 fig = px.histogram(df, x="sex", y="total_bill")
+
+# Configurando o hovertemplate para todos os pontos
 fig.update_traces(
-    hoverinfo="all",  # Mudamos para "all" para permitir hover em todos os pontos
-    hovertemplate=None,
+    hovertemplate="<b>%{x}</b><br>Total: $%{y:.2f}<extra></extra>",
 )
 
 app = Dash(__name__)
@@ -18,7 +19,7 @@ app.layout = html.Div(
     style={"height": 800, "padding": 50},
 )
 
-# Defina aqui o ponto específico para o qual você quer mostrar o tooltip
+# Defina aqui o ponto específico para o qual você quer mostrar o tooltip personalizado
 SPECIFIC_POINT = "Male"  # Por exemplo, apenas mostrar tooltip para "Male"
 
 @app.callback(
@@ -31,9 +32,9 @@ def update_tooltip_content(hoverData):
     if hoverData is None:
         return False, no_update, no_update
 
-    pt = hoverData["points"][0]
+    pt = hoverData["points"][0]	
     
-    # Verificar se o ponto atual é o específico que queremos mostrar o tooltip
+    # Verificar se o ponto atual é o específico que queremos mostrar o tooltip personalizado
     if pt["x"] != SPECIFIC_POINT:
         return False, no_update, no_update
     

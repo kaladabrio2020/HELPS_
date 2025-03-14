@@ -242,7 +242,7 @@ xaxis_params = {
     'tickfont': {'size': 12, 'color': 'black'},  # Fonte dos rótulos de ticks.
     'tickformat': '',  # Formato para ticks (formatação numérica, por exemplo).
     'tickformatstops': [],  # Parâmetros adicionais para formatação de ticks.
-    'ticklen': 6,  # Comprimento dos ticks.
+    'ticklen': 6,  
     'tickmode': 'auto',  # Como os ticks são posicionados ('auto', 'array').
     'tickprefix': '',  # Prefixo dos valores dos ticks.
     'ticks': 'outside',  # Onde os ticks são posicionados ('inside', 'outside', 'none').
@@ -261,6 +261,7 @@ xaxis_params = {
     'range': [0, 100],  # Intervalo de valores para o eixo X.
     'scaleanchor': 'y',  # Escala do eixo X ancorada no eixo Y.
     'scaleratio': 1,  # Razão de escala entre os eixos.
+    'nticks' : 1 # Comprimento dos ticks.
 }
 ```
 &nbsp;
