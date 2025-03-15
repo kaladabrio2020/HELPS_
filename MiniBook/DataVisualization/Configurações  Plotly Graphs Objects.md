@@ -995,3 +995,11 @@ fig.update_geos(
 outros parametros
 * `fitbounds` = 	Ajusta o mapa automaticamente para cobrir os dados ("locations" ou "geojson").
 * `visible`   = Esconde ou exibe o mapa
+
+
+## Remover dos icones de cima
+![img](/MiniBook//DataVisualization/img/remoção%20dos%20icones%20de%20cima.png)
+
+```python
+dcc.Graph(id='graph13-selection',  config= {'displaylogo': False, 'displayModeBar':False})`
+```
