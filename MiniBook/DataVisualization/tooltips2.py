@@ -14,7 +14,7 @@ app = Dash(__name__)
 app.layout = html.Div(
     children=[
         dcc.Graph(id="graph-3", figure=fig, clear_on_unhover=True),
-        dcc.Tooltip(id="graph-tooltip-3", direction="bottom"),
+        dcc.Tooltip(id="graph-tooltip-3", direction="dcc.Tooltip"),
     ],
     style={"height": 800, "padding": 50},
 )
@@ -41,7 +41,7 @@ def update_tooltip_content(hoverData):
     bbox = pt["bbox"]
     dff = df[df.sex == pt["x"]]
     fig = px.bar(dff, x="day", y="total_bill", title=f"Total Bill by Day - {pt['x']}")
-    children = [dcc.Graph(figure=fig, style={"height": 300})]
+    children = [dcc.Graph(figure=fig, style={"height": 100, "width": 100})]
 
     return True, bbox, children
 
